@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #14161A;
+  color: #F3F1EC;
+  font-family: 'Inter', sans-serif;
+}
+
+.energy-line {
+  position: relative;
+}
+.energy-line::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 6px;
+  height: 100%;
+  background: linear-gradient(180deg, #FF4D6D 0%, #FF7A8A 100%);
+  transform: skewX(-8deg);
+}
+
+.diagonal-divider {
+  clip-path: polygon(0 0, 100% 0, 100% 92%, 0 100%);
+}

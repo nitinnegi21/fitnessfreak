@@ -7,7 +7,7 @@ const COURSES = [
     tag: "Dance • Cardio",
     emoji: "💃",
     desc: "High-energy dance cardio set to music that makes 60 minutes feel like 10.",
-    image: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&h=750&fit=crop&q=80",
+    image: "/zumba.jpg",
     price: "₹399",
     amount: 39900,
   },

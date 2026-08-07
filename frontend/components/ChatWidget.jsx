@@ -15,7 +15,7 @@ async function sendMessage(message) {
 }
 
 export default function ChatWidget() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([
     { role: "bot", text: "Hey! I'm the fitness.com assistant. Ask me about Zumba, Yoga, Strength Training, or Fitness Training." },

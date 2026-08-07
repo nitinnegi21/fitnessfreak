@@ -15,7 +15,12 @@ async function sendMessage(message) {
 }
 
 export default function ChatWidget() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
+
+  // Auto-open after mount so SSR and client render match (avoids hydration error)
+  useEffect(() => {
+    setOpen(true);
+  }, []);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([
     { role: "bot", text: "Hey! I'm the fitness.com assistant. Ask me about Zumba, Yoga, Strength Training, or Fitness Training." },

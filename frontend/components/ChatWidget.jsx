@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
+const API_BASE = "";  // uses Next.js /app/api/chat route — works on both local and prod
 
 async function sendMessage(message) {
   const res = await fetch(`${API_BASE}/api/chat`, {

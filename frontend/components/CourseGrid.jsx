@@ -56,10 +56,16 @@ function loadRazorpay() {
 function CourseCard({ course }) {
   const [imgError, setImgError] = useState(false);
   const [hovered, setHovered] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   async function handleEnroll() {
+    setLoading(true);
     const ok = await loadRazorpay();
-    if (!ok) { alert("Could not load payment gateway. Check your connection."); return; }
+    if (!ok) {
+      setLoading(false);
+      alert("Could not load payment gateway. Check your connection.");
+      return;
+    }
     const rzp = new window.Razorpay({
       key: RZP_KEY,
       amount: course.amount,
@@ -67,10 +73,20 @@ function CourseCard({ course }) {
       name: "fitness.com",
       description: `${course.name} — per month`,
       theme: { color: "#FF4D6D" },
-      handler: (res) => alert(`✅ Payment successful!\nID: ${res.razorpay_payment_id}\n\nWelcome to ${course.name}!`),
+      handler: (res) => {
+        setLoading(false);
+        alert(`✅ Payment successful!\nID: ${res.razorpay_payment_id}\n\nWelcome to ${course.name}!`);
+      },
+      modal: {
+        ondismiss: () => setLoading(false),
+      },
     });
-    rzp.on("payment.failed", (r) => alert(`❌ Payment failed: ${r.error.description}`));
+    rzp.on("payment.failed", (r) => {
+      setLoading(false);
+      alert(`❌ Payment failed: ${r.error.description}`);
+    });
     rzp.open();
+    setLoading(false); // modal is open, button can reset
   }
 
   return (
@@ -168,24 +184,54 @@ function CourseCard({ course }) {
         {/* Enroll button */}
         <button
           onClick={handleEnroll}
+          disabled={loading}
           style={{
             width: "100%",
-            background: "#FF4D6D",
+            background: loading ? "#cc3d58" : "#FF4D6D",
             color: "#14161A",
             fontWeight: "700",
             fontSize: "14px",
             padding: "12px",
             borderRadius: "14px",
             border: "none",
-            cursor: "pointer",
+            cursor: loading ? "not-allowed" : "pointer",
             boxShadow: "0 4px 20px rgba(255,77,109,0.3)",
             transition: "opacity 0.2s",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "8px",
           }}
-          onMouseEnter={e => e.currentTarget.style.opacity = "0.85"}
-          onMouseLeave={e => e.currentTarget.style.opacity = "1"}
+          onMouseEnter={e => { if (!loading) e.currentTarget.style.opacity = "0.85"; }}
+          onMouseLeave={e => { e.currentTarget.style.opacity = "1"; }}
         >
-          Enroll Now — {course.price}
+          {loading ? (
+            <>
+              {/* Spinning circle */}
+              <svg
+                width="16" height="16"
+                viewBox="0 0 16 16"
+                style={{ animation: "spin 0.8s linear infinite" }}
+              >
+                <circle
+                  cx="8" cy="8" r="6"
+                  fill="none"
+                  stroke="#14161A"
+                  strokeWidth="2.5"
+                  strokeDasharray="28"
+                  strokeDashoffset="10"
+                  strokeLinecap="round"
+                />
+              </svg>
+              Opening payment…
+            </>
+          ) : (
+            `Enroll Now — ${course.price}`
+          )}
         </button>
+
+        {/* Keyframe for spinner */}
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     </div>
   );
